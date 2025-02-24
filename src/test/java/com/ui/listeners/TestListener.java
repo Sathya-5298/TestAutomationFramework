@@ -11,8 +11,10 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.qa.utility.BrowserUtility;
 import com.qa.utility.ExtentReporterUtility;
 import com.qa.utility.LoggerUtility;
+import com.ui.tests.TestBase;
 
 public class TestListener implements ITestListener {
 
@@ -42,6 +44,7 @@ public class TestListener implements ITestListener {
 		logger.error(result.getThrowable().getMessage());
 		ExtentReporterUtility.getTest().log(Status.FAIL, result.getMethod().getMethodName() + " Failed");
 		ExtentReporterUtility.getTest().log(Status.FAIL, result.getThrowable().getMessage());
+		
 		
 	
 	}
