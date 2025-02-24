@@ -8,7 +8,7 @@ public class LoginTestOld {
 
 	public static void main(String[] args) 
 	{
-		HomePage homePage = new HomePage(EDGE);
+		HomePage homePage = new HomePage(EDGE, false);
 		LoginPage loginPage = homePage.goToLoginPage();
 		loginPage.doLoginWith("xefixo5258@bitflirt.com", "Password");
 		
