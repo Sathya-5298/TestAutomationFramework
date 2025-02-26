@@ -3,11 +3,15 @@ package com.qa.utility;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -16,13 +20,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.qa.constants.Browser;
 
 public abstract class BrowserUtility 
 {
 	private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
-	Logger logger = LoggerUtility.getLogger(this.getClass());
+	private Logger logger = LoggerUtility.getLogger(this.getClass());
+	private WebDriverWait wait;
 
 	public WebDriver getDriver() 
 	{
@@ -33,6 +41,7 @@ public abstract class BrowserUtility
 	{
 		super();
 		this.driver.set(driver); // Initialize the instance variable
+		wait = new WebDriverWait(driver, Duration.ofSeconds(25L));
 	}
 	
 	public BrowserUtility(String browserName) 
@@ -42,11 +51,13 @@ public abstract class BrowserUtility
 		{
 			driver.set(new ChromeDriver()); // Launch a browser window or Browser session is created
 			maximizeWindow();
+			wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 		}
 		else if(browserName.equalsIgnoreCase("Edge"))
 		{
 			driver.set(new EdgeDriver()); // Launch a browser window or Browser session is created
 			maximizeWindow();
+			wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 		}
 		else
 		{
@@ -62,11 +73,13 @@ public abstract class BrowserUtility
 		{
 			driver.set(new ChromeDriver()); // Launch a browser window or Browser session is created
 			maximizeWindow();
+			wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 		}
 		else if(browserName == Browser.EDGE)
 		{
 			driver.set(new EdgeDriver()); // Launch a browser window or Browser session is created
 			maximizeWindow();
+			wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 		}
 		else
 		{
@@ -87,11 +100,13 @@ public abstract class BrowserUtility
 				options.addArguments("--window-size=1920,1080");
 				driver.set(new ChromeDriver(options)); // Launch a browser window or Browser session is created
 				maximizeWindow();
+				wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 			}
 			else
 			{
 				driver.set(new ChromeDriver()); // Launch a browser window or Browser session is created
 				maximizeWindow();
+				wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 			}
 		}
 		else if(browserName == Browser.EDGE)
@@ -104,11 +119,13 @@ public abstract class BrowserUtility
 				options.addArguments("--window-size=1920,1080");
 				driver.set(new EdgeDriver(options)); // Launch a browser window or Browser session is created
 				maximizeWindow();
+				wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 			}
 			else
 			{
 				driver.set(new EdgeDriver()); // Launch a browser window or Browser session is created
 				maximizeWindow();
+				wait = new WebDriverWait(driver.get(), Duration.ofSeconds(25L));
 			}
 		}
 		else
@@ -133,19 +150,101 @@ public abstract class BrowserUtility
 	public void clickOn(By locator)
 	{
 		logger.info("Clicking on the Locator " + locator);
-		WebElement element = driver.get().findElement(locator);
+		// WebElement element = driver.get().findElement(locator);
+		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
 		element.click();
 	}
 	
+	public void clickOnCheckBox(By locator)
+	{
+		logger.info("Clicking on the CheckBox " + locator);
+		// WebElement element = driver.get().findElement(locator);
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		element.click();
+	}
+	
+	public void clickOn(WebElement element)
+	{
+		logger.info("Clicking on the element " + element);
+		element.click();
+	}
+	
+	
 	public void enterText(By locator, String text)
 	{
-		WebElement element = driver.get().findElement(locator);
+		logger.info("Entering Text for " + locator);
+		// WebElement element = driver.get().findElement(locator);
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 		element.sendKeys(text);
+	}
+	
+	public void clearText(By locator)
+	{
+		logger.info("Clearing Text for " + locator);
+		// WebElement element = driver.get().findElement(locator);
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		element.clear();
+	}
+	
+	public void selectFromDropdown(By dropdownLocator, String textToSelect)
+	{
+		logger.info("Selecting dropdown " + dropdownLocator);
+		WebElement element = driver.get().findElement(dropdownLocator);
+		Select select = new Select(element);
+		logger.info("Selecting dropdown value " + textToSelect);
+		select.selectByVisibleText(textToSelect);
+	}
+	
+	public void enterSpecialKey(By locator, Keys keyToEnter)
+	{
+		logger.info("Entering Special Keys " + keyToEnter);
+		// WebElement element = driver.get().findElement(locator);
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		element.sendKeys(keyToEnter);
 	}
 	
 	public String getVisibleText(By locator)
 	{
-		WebElement element = driver.get().findElement(locator);
+		logger.info("Finding element with " + locator);
+		
+		// WebElement element = driver.get().findElement(locator);
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		logger.info("Returing Visible Text " + locator);
+		return element.getText();
+		
+	}
+	
+	public List<String> getALLVisibleText(By locator)
+	{
+		
+		logger.info("Finding all element with " + locator);
+		List<WebElement> elementList = driver.get().findElements(locator);
+		
+		logger.info("Returing Visible Texts Lists");
+		
+		List<String> visibleTextList = new ArrayList<String>();
+		
+		for(WebElement element:elementList) 
+		{
+			visibleTextList.add(getVisibleText(element));
+		}
+		
+		return visibleTextList;
+	}
+	
+	public List<WebElement> getALLElements(By locator)
+	{
+		
+		logger.info("Finding all element with " + locator);
+		List<WebElement> elementList = driver.get().findElements(locator);
+		
+		logger.info("Returing Visible Texts Lists");
+		return elementList;
+	}
+	
+	public String getVisibleText(WebElement element)
+	{
+		logger.info("Returing Visible Text " + element.getText());
 		return element.getText();
 		
 	}
