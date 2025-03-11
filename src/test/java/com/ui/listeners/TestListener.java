@@ -45,7 +45,13 @@ public class TestListener implements ITestListener {
 		ExtentReporterUtility.getTest().log(Status.FAIL, result.getMethod().getMethodName() + " Failed");
 		ExtentReporterUtility.getTest().log(Status.FAIL, result.getThrowable().getMessage());
 		
+		Object testClass = result.getInstance();
 		
+		BrowserUtility browserUtility = ((TestBase)testClass).getInstance();
+		logger.info("Capturing ScreenShots for Failed Tests");
+		String screenShotPath = browserUtility.takeScreenShot(result.getMethod().getMethodName());
+		logger.info("Attaching ScreenShots for HTML report File");
+		ExtentReporterUtility.getTest().addScreenCaptureFromPath(screenShotPath);
 	
 	}
 
