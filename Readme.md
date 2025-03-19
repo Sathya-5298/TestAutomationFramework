@@ -6,7 +6,7 @@ It supports data-driven testing, cloud-based test execution like Lambda test, he
 
 
 ## 🚀 About Me
-Hello, I am SathyaMurth D and I have 4 years of experience in Automation testing using technologies like Selenium Webdriver,JAVA, API Testing with Postman and Rest Assured
+Hello, I am SathyaMurth D and a Test Automation Engineer with over 4 years of experience with end-to-end testing projects across multiple domains such as retail, luxury fashion, gaming. Expertise in Automation Testing using Selenium WebDriver with Java, Cucumber BDD, TestNG, API testing with Postman and REST Assured, database testing. Embracing a mindset of continuous learning and seeking new opportunities to develop and grow in my role
 
 
 
